@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Card, CardContent, CardActions, Button, Typography } from '@mui/material'
+import { TextField, Card, Checkbox, CardContent, CardActions, Button, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 
@@ -19,20 +19,32 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
           onSubmit={handleSubmit}
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
         >
-          {todos.map((name, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+          {todos.map((todo, index) => (
+            <div key={index} style={{ display: 'flex', alignItems: 'center', padding: 15, background: todo.done ? "#edffcc" : "white" }}>
               <Typography sx={{ margin: '8px' }} variant='h6'>
                 {index + 1}
               </Typography>
+              <Checkbox
+                checked={todo.done}
+                onChange={() => {
+                  setTodos([
+                    // immutable update
+                    ...todos.slice(0, index),
+                    {text: todo.text, done: !todo.done},
+                    ...todos.slice(index + 1),
+                  ])
+                }}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />
               <TextField
-                sx={{ flexGrow: 1, marginTop: '1rem' }}
+                sx={{ flexGrow: 1, }}
                 label='What to do?'
-                value={name}
+                value={todo.text}
                 onChange={(event) => {
                   setTodos([
                     // immutable update
                     ...todos.slice(0, index),
-                    event.target.value,
+                    {text: event.target.value, done: todo.done},
                     ...todos.slice(index + 1),
                   ])
                 }}
