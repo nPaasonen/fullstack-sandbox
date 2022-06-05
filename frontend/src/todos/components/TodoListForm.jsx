@@ -11,18 +11,22 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
     saveTodoList(todoList.id, { todos })
   }
 
+  const isAllTodosCompleted = (list) => {
+    return list.every(i => i.done)
+  }
+
   return (
-    <Card sx={{ margin: '0 1rem' }}>
+    <Card sx={{ margin: '0 1rem', border: "2px solid", borderColor: isAllTodosCompleted(todos) ? "#bbe077" : "white"}}>
       <CardContent>
-        <Typography component='h2'>{todoList.title}</Typography>
+        <Typography component='h2'>{todoList.title} {isAllTodosCompleted(todos) ? "✅" : ""}</Typography>
         <form
           onSubmit={handleSubmit}
-          style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+          style={{ display: 'flex', flexDirection: 'column', flexGrow: 1}}
         >
           {todos.map((todo, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center', padding: 15, background: todo.done ? "#edffcc" : "white" }}>
+            <div key={index} style={{ display: 'flex', alignItems: 'center', padding: 15, background: todo.done ? "#edffcc" : "white", marginTop: 10 }}>
               <Typography sx={{ margin: '8px' }} variant='h6'>
-                {index + 1}
+                {index + 1} 
               </Typography>
               <Checkbox
                 checked={todo.done}
@@ -34,7 +38,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                     ...todos.slice(index + 1),
                   ])
                 }}
-                inputProps={{ 'aria-label': 'controlled' }}
               />
               <TextField
                 sx={{ flexGrow: 1, }}
@@ -70,7 +73,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, {text: "", done: false}])
               }}
             >
               Add Todo <AddIcon />
