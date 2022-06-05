@@ -13,6 +13,15 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
     saveTodoList(todoList.id, { todos })
   }
 
+  const handleChange = (text, isDone, date, i) => {
+    setTodos([
+      // immutable update
+      ...todos.slice(0, i),
+      {text: text, done: isDone, date: date},
+      ...todos.slice(i + 1),
+    ])
+  }
+
   const isAllTodosCompleted = (list) => {
     return list.every(i => i.done)
   }
@@ -20,7 +29,11 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
   return (
     <Card sx={{ margin: '0 1rem', border: "2px solid", borderColor: isAllTodosCompleted(todos) ? "#bbe077" : "white"}}>
       <CardContent>
-        <Typography component='h2'>{todoList.title} {isAllTodosCompleted(todos) ? "✅" : ""}</Typography>
+        <Typography component='h2'>
+          {todoList.title + ": "} 
+          {todos.filter(t => t.done).length + "/" + todos.length} 
+          {isAllTodosCompleted(todos) && " ✅"}
+        </Typography>
         <form
           onSubmit={handleSubmit}
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1}}
@@ -31,39 +44,19 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 {index + 1} 
               </Typography>
               <Checkbox
+                color="success"
                 checked={todo.done}
-                onChange={() => {
-                  setTodos([
-                    // immutable update
-                    ...todos.slice(0, index),
-                    {text: todo.text, done: !todo.done, date: todo.date},
-                    ...todos.slice(index + 1),
-                  ])
-                }}
+                onChange={() => handleChange(todo.text, !todo.done, todo.date, index)}
               />
               <TextField
                 sx={{ width: "100%", }}
                 label='What to do?'
                 value={todo.text}
-                onChange={(event) => {
-                  setTodos([
-                    // immutable update
-                    ...todos.slice(0, index),
-                    {text: event.target.value, done: todo.done, date: todo.date},
-                    ...todos.slice(index + 1),
-                  ])
-                }}
+                onChange={(event) => handleChange(event.target.value, todo.done, todo.date, index)}
               />
               <DatePick 
                 todo={todo} 
-                setTodos={(date) => {
-                  setTodos([
-                    // immutable update
-                    ...todos.slice(0, index),
-                    { text: todo.text, done: todo.done, date: date },
-                    ...todos.slice(index + 1),
-                  ])
-                }}
+                setTodos={(newDate) => handleChange(todo.text, todo.done, newDate, index)}
               />
               <Button
                 sx={{ margin: '8px' }}
