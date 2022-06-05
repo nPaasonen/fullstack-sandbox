@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { TextField, Card, Checkbox, CardContent, CardActions, Button, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
+import moment from 'moment'
+import { DatePick } from '../DatePick'
 
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos)
@@ -34,20 +36,31 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                   setTodos([
                     // immutable update
                     ...todos.slice(0, index),
-                    {text: todo.text, done: !todo.done},
+                    {text: todo.text, done: !todo.done, date: todo.date},
                     ...todos.slice(index + 1),
                   ])
                 }}
               />
               <TextField
-                sx={{ flexGrow: 1, }}
+                sx={{ width: "100%", }}
                 label='What to do?'
                 value={todo.text}
                 onChange={(event) => {
                   setTodos([
                     // immutable update
                     ...todos.slice(0, index),
-                    {text: event.target.value, done: todo.done},
+                    {text: event.target.value, done: todo.done, date: todo.date},
+                    ...todos.slice(index + 1),
+                  ])
+                }}
+              />
+              <DatePick 
+                todo={todo} 
+                setTodos={(date) => {
+                  setTodos([
+                    // immutable update
+                    ...todos.slice(0, index),
+                    { text: todo.text, done: todo.done, date: date },
                     ...todos.slice(index + 1),
                   ])
                 }}
@@ -73,7 +86,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, {text: "", done: false}])
+                setTodos([...todos, {text: "", done: false, date: moment().add(1,'days')}])
               }}
             >
               Add Todo <AddIcon />

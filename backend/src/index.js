@@ -7,17 +7,20 @@ app.use(express.json())
 
 const PORT = 3001
 
+var tomorrow = new Date()
+tomorrow.setDate(tomorrow.getDate() + 1)
+
 // initial todo lists in storage
 var todoLists = {
   '0000000001': {
     id: '0000000001',
     title: 'First List',
-    todos: [{ text: 'First todo of first list!', done: false }],
+    todos: [{ text: 'First todo of first list!', done: false, date: tomorrow}],
   },
   '0000000002': {
     id: '0000000002',
     title: 'Second List',
-    todos: [{ text: 'First todo of second list!', done: false }],
+    todos: [{ text: 'First todo of second list!', done: false, date: tomorrow}],
   },
 }
 
