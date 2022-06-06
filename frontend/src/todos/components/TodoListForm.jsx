@@ -56,7 +56,8 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
                 onChange={(event) => handleChange(event.target.value, todo.done, todo.date, index)}
               />
               <DatePick 
-                todo={todo} 
+                date={todo.date}
+                done={todo.done}
                 handleChange={(newDate) => handleChange(todo.text, todo.done, newDate, index)}
               />
               <Button

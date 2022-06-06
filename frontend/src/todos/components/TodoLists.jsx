@@ -16,16 +16,15 @@ export const TodoLists = ({ style }) => {
   const [activeList, setActiveList] = useState()
 
   useEffect(() => {
+    const fetchTodos = () => {
+      fetch('http://localhost:3001/todos')
+        .then((res) => res.json())
+        .then((data) => {
+          setTodoLists(data)
+        })
+    }
     fetchTodos()
   }, [])
-
-  const fetchTodos = () => {
-    fetch('http://localhost:3001/todos')
-      .then((res) => res.json())
-      .then((data) => {
-        setTodoLists(data)
-      })
-  }
 
   const saveTodoList = async (id, { todos }) => {
     const listToUpdate = todoLists[id]
