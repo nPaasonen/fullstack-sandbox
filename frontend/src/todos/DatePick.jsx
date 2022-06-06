@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Typography } from '@mui/material'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-export const DatePick = ({ todo, setTodos }) => {
+export const DatePick = ({ todo, handleChange }) => {
   const renderDue = (date) => 'Due ' + moment(date).fromNow()
 
   const isOverdue = (todo) => !todo.done && moment().diff(moment(todo.date)) > 0
@@ -14,7 +14,7 @@ export const DatePick = ({ todo, setTodos }) => {
       <Typography variant='subtitle2' sx={{ margin: '0px', color: isOverdue(todo) ? 'red' : 'black' }}>
         {todo.done ? "Done" : renderDue(todo.date)}
       </Typography>
-      <DatePicker selected={new Date(todo.date)} onChange={(date) => setTodos(date)} />
+      <DatePicker selected={new Date(todo.date)} onChange={(date) => handleChange(date)} />
     </div>
   )
 }

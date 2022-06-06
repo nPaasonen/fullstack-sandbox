@@ -29,12 +29,11 @@ export const TodoLists = ({ style }) => {
 
   const saveTodoList = async (id, { todos }) => {
     const listToUpdate = todoLists[id]
-
     setTodoLists({
       ...todoLists,
       [id]: { ...listToUpdate, todos },
     })
-    
+
     await fetch('http://localhost:3001/todos/' + id, {
       method: 'POST',
       headers: {

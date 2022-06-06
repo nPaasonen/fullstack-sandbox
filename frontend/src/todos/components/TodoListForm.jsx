@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import { TextField, Card, Checkbox, CardContent, CardActions, Button, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
@@ -8,22 +8,23 @@ import { DatePick } from '../DatePick'
 export const TodoListForm = ({ todoList, saveTodoList }) => {
   const [todos, setTodos] = useState(todoList.todos)
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    saveTodoList(todoList.id, { todos })
-  }
+  // autosave
+  useEffect(() => {
+    saveTodoList(todoList.id, {todos})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todos])
 
-  const handleChange = (text, isDone, date, i) => {
+  const handleChange = (text, done, date, i) => {
+    const newTodo = {text, done, date}
     setTodos([
-      // immutable update
       ...todos.slice(0, i),
-      {text: text, done: isDone, date: date},
-      ...todos.slice(i + 1),
+      newTodo,
+      ...todos.slice(i + 1)
     ])
   }
 
   const isAllTodosCompleted = (list) => {
-    return list.every(i => i.done)
+    return list.length && list.every(i => i.done)
   }
 
   return (
@@ -32,10 +33,10 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
         <Typography component='h2'>
           {todoList.title + ": "} 
           {todos.filter(t => t.done).length + "/" + todos.length} 
-          {isAllTodosCompleted(todos) && " ✅"}
+          {isAllTodosCompleted(todos) ? " ✅" : ""}
         </Typography>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(event) => event.preventDefault()}
           style={{ display: 'flex', flexDirection: 'column', flexGrow: 1}}
         >
           {todos.map((todo, index) => (
@@ -56,7 +57,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               />
               <DatePick 
                 todo={todo} 
-                setTodos={(newDate) => handleChange(todo.text, todo.done, newDate, index)}
+                handleChange={(newDate) => handleChange(todo.text, todo.done, newDate, index)}
               />
               <Button
                 sx={{ margin: '8px' }}
@@ -83,9 +84,6 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
               }}
             >
               Add Todo <AddIcon />
-            </Button>
-            <Button type='submit' variant='contained' color='primary'>
-              Save
             </Button>
           </CardActions>
         </form>
