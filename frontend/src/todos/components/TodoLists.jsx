@@ -26,14 +26,14 @@ export const TodoLists = ({ style }) => {
     fetchTodos()
   }, [])
 
-  const saveTodoList = async (id, { todos }) => {
-    const listToUpdate = todoLists[id]
+  const saveTodoList = async ({ todos }) => {
+    const listToUpdate = todoLists[activeList]
     setTodoLists({
       ...todoLists,
-      [id]: { ...listToUpdate, todos },
+      [activeList]: { ...listToUpdate, todos },
     })
 
-    await fetch('http://localhost:3001/todos/' + id, {
+    await fetch('http://localhost:3001/todos/' + activeList, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const TodoLists = ({ style }) => {
         <TodoListForm
           key={activeList} // use key to make React recreate component to reset internal state
           todoList={todoLists[activeList]}
-          saveTodoList={(id, todos) => saveTodoList(id, todos)}
+          saveTodoList={saveTodoList}
         />
       )}
     </Fragment>

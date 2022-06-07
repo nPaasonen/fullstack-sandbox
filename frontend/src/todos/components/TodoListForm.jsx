@@ -10,7 +10,7 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
 
   // autosave
   useEffect(() => {
-    saveTodoList(todoList.id, {todos})
+    saveTodoList({todos})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todos])
 
@@ -23,8 +23,8 @@ export const TodoListForm = ({ todoList, saveTodoList }) => {
     ])
   }
 
-  const isAllTodosCompleted = (list) => {
-    return list.length && list.every(i => i.done)
+  const isAllTodosCompleted = (todos) => {
+    return todos.length && todos.every(todo => todo.done)
   }
 
   return (
