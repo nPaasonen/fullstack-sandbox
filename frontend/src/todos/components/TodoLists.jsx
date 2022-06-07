@@ -10,6 +10,17 @@ import {
 } from '@mui/material'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import { TodoListForm } from './TodoListForm'
+import { debounce } from 'lodash'
+
+const postTodos = debounce(function (activeList, todos) {
+  fetch('http://localhost:3001/todos/' + activeList, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ todos }),
+  })
+}, 500)
 
 export const TodoLists = ({ style }) => {
   const [todoLists, setTodoLists] = useState({})
@@ -26,20 +37,14 @@ export const TodoLists = ({ style }) => {
     fetchTodos()
   }, [])
 
-  const saveTodoList = async ({ todos }) => {
+  const saveTodoList = ({ todos }) => {
     const listToUpdate = todoLists[activeList]
     setTodoLists({
       ...todoLists,
       [activeList]: { ...listToUpdate, todos },
     })
 
-    await fetch('http://localhost:3001/todos/' + activeList, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ todos }),
-    })
+    postTodos(activeList, todos)
   }
 
   if (!Object.keys(todoLists).length) return null
